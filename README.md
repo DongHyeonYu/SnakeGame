@@ -9,33 +9,33 @@ g++ -o snake <every .cpp files> -lncurses
 ex) g++ -o snake main.cpp Snake.cpp -lncurses
 
 ## Characters with ncurses library
-Upper left corner           ┌
-Lower left corner           └
-Lower right corner          ┘
-Tee pointing right          ├
-Tee pointing left           ┤
-Tee pointing up             ┴
-Tee pointing down           ┬
-Horizontal line             ─
-Vertical line               │
-Large Plus or cross over    ┼
-Scan Line 1                 ⎺
-Scan Line 3                 ⎻
-Scan Line 7                 ⎼
-Scan Line 9                 ⎽
-Diamond                     ♦
-Checker board (stipple)     ▒
-Degree Symbol               °
-Plus/Minus Symbol           ±
-Bullet                      ·
-Arrow Pointing Left         <
-Arrow Pointing Right        >
-Arrow Pointing Down         v
-Arrow Pointing Up           ^
-Board of squares            #
-Lantern Symbol              ␋
-Solid Square Block          #
-Less/Equal sign             ≤
-Greater/Equal sign          ≥
-Pi                          π
+Upper left corner           ┌</br>
+Lower left corner           └</br>
+Lower right corner          ┘</br>
+Tee pointing right          ├</br>
+Tee pointing left           ┤</br>
+Tee pointing up             ┴</br>
+Tee pointing down           ┬</br>
+Horizontal line             ─</br>
+Vertical line               │</br>
+Large Plus or cross over    ┼</br>
+Scan Line 1                 ⎺</br>
+Scan Line 3                 ⎻</br>
+Scan Line 7                 ⎼</br>
+Scan Line 9                 ⎽</br>
+Diamond                     ♦</br>
+Checker board (stipple)     ▒</br>
+Degree Symbol               °</br>
+Plus/Minus Symbol           ±</br>
+Bullet                      ·</br>
+Arrow Pointing Left         <</br>
+Arrow Pointing Right        ></br>
+Arrow Pointing Down         v</br>
+Arrow Pointing Up           ^</br>
+Board of squares            #</br>
+Lantern Symbol              ␋</br>
+Solid Square Block          #</br>
+Less/Equal sign             ≤</br>
+Greater/Equal sign          ≥</br>
+Pi                          π</br>
 Not equal                   ≠UK pound sign               £
