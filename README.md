@@ -5,7 +5,7 @@
 <img src="https://img.shields.io/badge/c++-00599C?style=flat-square&logo=c%2B%2B&logoColor=white"/></a>
 
 ## How to RUN?
-g++ -o snake <every .cpp files> -lncurses
+g++ -o snake <every .cpp files> -lncurses </br>
 ex) g++ -o snake main.cpp Snake.cpp -lncurses
 
 ## Characters with ncurses library
