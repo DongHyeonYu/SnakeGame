@@ -1,9 +1,0 @@
-{
-  "files.associations": {
-    "*.cpp": "cpp",
-    "utility": "cpp",
-    "vector": "cpp",
-    "algorithm": "cpp",
-    "deque": "cpp"
-  }
-}
