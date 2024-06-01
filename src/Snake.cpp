@@ -6,6 +6,15 @@ Snake::Snake(int width, int height){
     body.push_back(make_pair(height/2, width/2-1));
     body.push_back(make_pair(height/2, width/2));
     body.push_back(make_pair(height/2, width/2+1));
+    body.push_back(make_pair(height/2, width/2+2));
+    body.push_back(make_pair(height/2, width/2+3));
+    body.push_back(make_pair(height/2, width/2+4));
+    body.push_back(make_pair(height/2, width/2+5));
+    body.push_back(make_pair(height/2, width/2+6));
+    body.push_back(make_pair(height/2, width/2+7));
+    body.push_back(make_pair(height/2, width/2+8));
+    body.push_back(make_pair(height/2, width/2+9	));
+
 }
 
 void Snake::moveLeft(){
