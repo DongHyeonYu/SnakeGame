@@ -9,19 +9,28 @@
 #include <vector>
 #include <algorithm>
 
-#include "Map.h" // Map 
-#include "Snake.h" // Snake
+#include "Map.h"
+#include "Snake.h"
+#include "Item.h"
+
+using namespace std;
 
 class SnakeGame{
-void init();
-void draw(const std::vector<std::vector<int>> &current_map);
-void input();
-void goForward();
-bool checkCollision();
-void endGame();
+  void init();
+  void draw(const vector<vector<int>> &current_map);
+  bool input();
+  void goForward();
+  bool checkCollision();
+  void endGame();
+  void manageItems();
+  bool checkItemCollision();
 
-bool gameOver;
-Snake snake; 
+  bool gameOver;
+  Snake snake;
+  vector<Item> items;
+
+  static const int ITEM_DURATION = 50; // 아이템 지속시간 최대 5초
+  static const int MAX_ITEMS = 3;
   
 public:  
   SnakeGame();

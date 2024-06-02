@@ -2,17 +2,17 @@
 #define MAP_H
 
 #include <vector>
-
+using namespace std;
 class Map{
 
 int WIDTH = 21;
 int HEIGHT = 21;
-std::vector<std::vector<std::vector<int> > >  map;
-std::vector<std::vector<int> > current_map;
+vector<vector<vector<int> > >  map;
+vector<vector<int> > current_map;
 
 public:
   Map(const int stage); //생성자
-  std::vector<std::vector<int> > getMap(const int stage);
+  vector<vector<int> > getMap(const int stage);
   int getWidth();
   int getHeight();
   wchar_t wall;
