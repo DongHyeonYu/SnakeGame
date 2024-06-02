@@ -9,7 +9,7 @@ const int HEIGHT = map.getHeight();
 
 using namespace std;
  
-SnakeGame::SnakeGame() : gameOver(false), snake(WIDTH, HEIGHT) {
+SnakeGame::SnakeGame() : gameOver(false), snake(WIDTH, HEIGHT), gate(WIDTH, HEIGHT) {
   init();
   srand(time(0));
 } 
@@ -35,6 +35,7 @@ void SnakeGame::run() {
       goForward();
     }
     manageItems();
+    manageGate();
     checkItemCollision();
     usleep(100000);
   }
@@ -42,58 +43,67 @@ void SnakeGame::run() {
 }
 
 void SnakeGame::draw(const vector<vector<int>> &current_map) {
-  clear();
+    clear();
 
-  const wchar_t wall = L'◼';
-  const wchar_t head = L'●';
-  const wchar_t body = L'○';
-  const wchar_t space = ' ';
-  const wchar_t growthItem = L'▲';
-  const wchar_t poisonItem = L'▼';
-  for (int y=0; y<HEIGHT; ++y) {
-    for (int x=0; x<WIDTH; ++x) {
-      if (current_map[y][x]==1 || current_map[y][x]==2){
-        mvaddnwstr(y, x * 2, &wall, 1); 
-      }
-      else {
-        bool isSnakePart = false;
+    const wchar_t wall = L'◼';
+    const wchar_t head = L'●';
+    const wchar_t body = L'○';
+    const wchar_t space = ' ';
+    const wchar_t growthItem = L'▲';
+    const wchar_t poisonItem = L'▼';
+    const wchar_t gatemark = L'▢'; // 게이트 표시
 
-        for (int s = 0; s<snake.getLength(); ++s) {
-          if (snake.body[s].first == y && snake.body[s].second == x) {
-            if (s == 0) {
-              mvaddnwstr(y, x * 2, &head, 1); // Head
-            } 
-            else {
-              mvaddnwstr(y, x * 2, &body, 1); // Body
+    for (int y = 0; y < HEIGHT; ++y) {
+        for (int x = 0; x < WIDTH; ++x) {
+            if (current_map[y][x] == 1 || current_map[y][x] == 2) {
+                mvaddnwstr(y, x * 2, &wall, 1); // Wall
+            } else {
+                bool isSnakePart = false;
+
+                for (int s = 0; s < snake.getLength(); ++s) {
+                    if (snake.body[s].first == y && snake.body[s].second == x) {
+                        if (s == 0) {
+                            mvaddnwstr(y, x * 2, &head, 1); // Head
+                        } else {
+                            mvaddnwstr(y, x * 2, &body, 1); // Body
+                        }
+                        isSnakePart = true;
+                        break;
+                    }
+                }
+
+                if (!isSnakePart) {
+                    bool isItemPart = false;
+                    for (int s = 0; s < items.size(); ++s) {
+                        if (items[s].getPosition().first == y && items[s].getPosition().second == x) {
+                            if (items[s].getIsGrowth()) {
+                                mvaddnwstr(y, x * 2, &growthItem, 1); // Growth Item
+                            } else {
+                                mvaddnwstr(y, x * 2, &poisonItem, 1); // Poison Item
+                            }
+                            isItemPart = true;
+                            break;
+                        }
+                    }
+                    if (!isItemPart) {
+                        mvaddnwstr(y, x * 2, &space, 1); // Empty space
+                    }
+                }
             }
-            isSnakePart = true;
-            break;
-          }
-        }
 
-        if (!isSnakePart) {
-          bool isItemPart = false;
-          for(int s =0; s< items.size(); ++s){
-            if(items[s].getPosition().first == y && items[s].getPosition().second == x){
-              if(items[s].getIsGrowth()){
-                mvaddnwstr(y, x * 2, &growthItem, 1); // growthItem
-              }
-              else{
-                mvaddnwstr(y, x * 2, &poisonItem, 1); // poisonItem
-              }
-              isItemPart = true;
-              break;
+            // Gate 표시를 벽과 다른 순서로 처리하여 위치 조정
+            if (gate.getTime() >= 0) { // 게이트가 활성화된 상태일 때만 그리기
+                bool isGate = (y == gate.getGate1Pos().first && x == gate.getGate1Pos().second) || (y == gate.getGate2Pos().first && x == gate.getGate2Pos().second);
+
+                if (isGate) {
+                    mvaddnwstr(y, x * 2, &gatemark, 1); // Gate
+                }
             }
-          }
-          if(!isItemPart){
-            mvaddnwstr(y, x * 2, &space, 1); // Empty space
-          }
         }
-      }
-      refresh();
     }
-  }
-}     
+    refresh();
+}
+     
 
 void SnakeGame::goForward() {
     snake.move();
@@ -177,6 +187,20 @@ void SnakeGame::manageItems(){
       items.push_back(newItem);
     }
   }
+}
+
+void SnakeGame::manageGate(){
+  gate.setTime(gate.getTime() + 1);
+
+    // 게이트가 GATE_DURATION보다 더 필드 위에 있으면 삭제하고 대기시간 시작
+    if (gate.getTime() > GATE_DURATION) {
+        gate.setTime(-GATE_COOLDOWN);
+    }
+
+    // 대기시간이 끝나면 새로운 게이트 생성
+    if (gate.getTime() == 0) {
+        gate.genGate(WIDTH, HEIGHT, current_map, snake.body);
+    }
 }
 
 bool SnakeGame::checkCollision() {

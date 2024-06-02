@@ -12,6 +12,7 @@
 #include "Map.h"
 #include "Snake.h"
 #include "Item.h"
+#include "Gate.h"
 
 using namespace std;
 
@@ -23,16 +24,21 @@ class SnakeGame{
   bool checkCollision();
   void endGame();
   void manageItems();
+  void manageGate();
   bool checkItemCollision();
 
   bool gameOver;
   Snake snake;
+  Gate gate;
   vector<Item> items;
 
   static const int ITEM_DURATION = 50; // 아이템 지속시간 최대 5초
+  static const int GATE_DURATION = 100; // 게이트 지속시간 최대 10초
   static const int MAX_ITEMS = 3;
+  static const int GATE_COOLDOWN = 30; // 게이트 재생성 대기 시간
+
   
-public:  
+public:
   SnakeGame();
   void run();
 };
