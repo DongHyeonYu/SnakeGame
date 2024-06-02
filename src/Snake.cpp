@@ -1,4 +1,6 @@
 #include "Snake.h"
+#include <iostream>
+using namespace std;
 
 Snake::Snake(int width, int height){
     dir = LEFT; // 처음엔 LEFT로 
@@ -6,43 +8,24 @@ Snake::Snake(int width, int height){
     body.push_back(make_pair(height/2, width/2-1));
     body.push_back(make_pair(height/2, width/2));
     body.push_back(make_pair(height/2, width/2+1));
-    body.push_back(make_pair(height/2, width/2+2));
-    body.push_back(make_pair(height/2, width/2+3));
-    body.push_back(make_pair(height/2, width/2+4));
-    body.push_back(make_pair(height/2, width/2+5));
-    body.push_back(make_pair(height/2, width/2+6));
-    body.push_back(make_pair(height/2, width/2+7));
-    body.push_back(make_pair(height/2, width/2+8));
-    body.push_back(make_pair(height/2, width/2+9	));
-
 }
 
-void Snake::moveLeft(){
+void Snake::move() {
     auto head = body.front();
-    head.second--;
-    body.push_front(head);
+    pair<int, int> newHead = head;
+    
+    switch (dir) {
+        case LEFT: newHead.second--; break;
+        case RIGHT: newHead.second++; break;
+        case UP: newHead.first--; break;
+        case DOWN: newHead.first++; break;
+    }
+    body.push_front(newHead);
     body.pop_back();
 }
 
-void Snake::moveRight(){
-    auto head = body.front();
-    head.second++;
-    body.push_front(head);
-    body.pop_back();
-}
-
-void Snake::moveUp(){
-    auto head = body.front();
-    head.first--;
-    body.push_front(head);
-    body.pop_back();
-}
-
-void Snake::moveDown(){
-    auto head = body.front();
-    head.first++;
-    body.push_front(head);
-    body.pop_back();
+void Snake::grow(){
+    body.push_back(body.back());
 }
 
 int Snake::getLength(){
