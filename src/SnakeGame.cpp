@@ -37,6 +37,7 @@ void SnakeGame::run() {
     manageItems();
     manageGate();
     checkItemCollision();
+    if (gate.getTime() > 0) checkGateEnter();
     usleep(100000);
   }
   endwin();
@@ -194,12 +195,16 @@ void SnakeGame::manageGate(){
 
     // 게이트가 GATE_DURATION보다 더 필드 위에 있으면 삭제하고 대기시간 시작
     if (gate.getTime() > GATE_DURATION) {
+        current_map[gate.getGate1Pos().first][gate.getGate1Pos().second] = 1;
+        current_map[gate.getGate2Pos().first][gate.getGate2Pos().second] = 1;
         gate.setTime(-GATE_COOLDOWN);
     }
 
     // 대기시간이 끝나면 새로운 게이트 생성
     if (gate.getTime() == 0) {
         gate.genGate(WIDTH, HEIGHT, current_map, snake.body);
+        current_map[gate.getGate1Pos().first][gate.getGate1Pos().second] = 0;
+        current_map[gate.getGate2Pos().first][gate.getGate2Pos().second] = 0;
     }
 }
 
@@ -207,9 +212,11 @@ bool SnakeGame::checkCollision() {
   pair<int, int> head = snake.body[0];
   int y = head.first;
   int x = head.second;
-  if (current_map[y][x]==1) return true; 
-  if (x <= 0 || x >= WIDTH - 1 || y <= 0 || y >= HEIGHT - 1 ) {
+  if (current_map[y][x]==1 ) {
     return true;
+  } 
+  if (x <= 0 || x >= WIDTH - 1 || y <= 0 || y >= HEIGHT - 1 ) {
+      return true;
   }
   for (int i = 1; i < snake.getLength(); ++i) {
     if (snake.body[i].first == y && snake.body[i].second == x) {
@@ -239,6 +246,17 @@ bool SnakeGame::checkItemCollision(){
       }
   }
   return false;
+}
+
+void SnakeGame::checkGateEnter(){
+  auto head = snake.body.front();
+  if(head.first == gate.getGate1Pos().first && head.second == gate.getGate1Pos().second){
+    snake.dir = snake.gateDicisionDir(map.getHeight(), map.getWidth(), snake.dir, gate.getGate2Pos(), current_map);
+    snake.gateEntry(gate.getGate2Pos(), snake.dir);
+  } else if(head.first == gate.getGate2Pos().first && head.second == gate.getGate2Pos().second){
+    snake.dir = snake.gateDicisionDir(map.getHeight(), map.getWidth(), snake.dir, gate.getGate1Pos(), current_map);
+    snake.gateEntry(gate.getGate1Pos(), snake.dir);
+  }
 }
 
 void SnakeGame::endGame() {

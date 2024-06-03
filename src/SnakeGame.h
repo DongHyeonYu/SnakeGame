@@ -26,6 +26,7 @@ class SnakeGame{
   void manageItems();
   void manageGate();
   bool checkItemCollision();
+  void checkGateEnter();
 
   bool gameOver;
   Snake snake;
