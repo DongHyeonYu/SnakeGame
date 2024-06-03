@@ -7,6 +7,8 @@ vector<vector<int>> current_map = map.getMap(0);
 const int WIDTH = map.getWidth();
 const int HEIGHT = map.getHeight();
 
+pair<int, int> head_lc = make_pair(-1, -1);
+
 using namespace std;
  
 SnakeGame::SnakeGame() : gameOver(false), snake(WIDTH, HEIGHT), gate(WIDTH, HEIGHT) {
@@ -253,10 +255,15 @@ void SnakeGame::checkGateEnter(){
   if(head.first == gate.getGate1Pos().first && head.second == gate.getGate1Pos().second){
     snake.dir = snake.gateDicisionDir(map.getHeight(), map.getWidth(), snake.dir, gate.getGate2Pos(), current_map);
     snake.gateEntry(gate.getGate2Pos(), snake.dir);
+    gate.pauseTime();
+    head_lc = snake.body.front();
   } else if(head.first == gate.getGate2Pos().first && head.second == gate.getGate2Pos().second){
     snake.dir = snake.gateDicisionDir(map.getHeight(), map.getWidth(), snake.dir, gate.getGate1Pos(), current_map);
     snake.gateEntry(gate.getGate1Pos(), snake.dir);
+    gate.pauseTime();
+    head_lc = snake.body.front();
   }
+  if(head_lc.first == snake.body.back().first && head_lc.second == snake.body.back().second) gate.resumeTime();
 }
 
 void SnakeGame::endGame() {

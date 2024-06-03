@@ -36,7 +36,7 @@ class SnakeGame{
   static const int ITEM_DURATION = 50; // 아이템 지속시간 최대 5초
   static const int GATE_DURATION = 100; // 게이트 지속시간 최대 10초
   static const int MAX_ITEMS = 3;
-  static const int GATE_COOLDOWN = 30; // 게이트 재생성 대기 시간
+  static const int GATE_COOLDOWN = 20; // 게이트 재생성 대기 시간
 
   
 public:

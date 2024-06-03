@@ -5,7 +5,7 @@
 Gate::Gate(int width, int height) {
     srand(time(0));
     genGate(width, height, vector<vector<int>>(), deque<pair<int, int>>());
-    curTime = -30;
+    curTime = -20;
 }
 
 void Gate::genGate(int width, int height, const vector<vector<int>>& map, const deque<pair<int, int>>& snakeBody) {
@@ -46,4 +46,19 @@ void Gate::setTime(int t) {
 
 int Gate::getTime() {
     return curTime;
+}
+
+//진출 도중 게이트 소멸을 방지할 시간 일시정지/시작 기능
+void Gate::pauseTime() {
+    if (!isPaused) {
+        pausedTime = curTime;
+        isPaused = true;
+    }
+}
+
+void Gate::resumeTime() {
+    if (isPaused) {
+        curTime = pausedTime;
+        isPaused = false;
+    }
 }

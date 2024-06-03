@@ -6,9 +6,10 @@
 using namespace std;
 
 class Gate {
-    pair<int, int> g1pos;
-    pair<int, int> g2pos;
+    pair<int, int> g1pos, g2pos;
     int curTime;
+    int pausedTime; // 일시정지 시간 저장
+    bool isPaused;
 
 public:
     Gate(int width, int height);
@@ -19,6 +20,9 @@ public:
     
     void setTime(int t);
     int getTime();
+
+    void pauseTime();
+    void resumeTime();
 };
 
 #endif
