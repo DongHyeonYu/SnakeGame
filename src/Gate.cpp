@@ -26,6 +26,7 @@ void Gate::genGate(int width, int height, const vector<vector<int>>& map, const 
                     break;
                 }
             }
+            if(g1pos.first == g2pos.first && g1pos.second == g2pos.second) validGate = false;
         }
         else continue;
     }
