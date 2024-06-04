@@ -5,7 +5,7 @@ int stage = 0;
 Map map(0);
 vector<vector<int>> current_map = map.getMap(0);
   
-
+int debug = 0;
 const int WIDTH = map.getWidth();
 const int HEIGHT = map.getHeight();
 
@@ -34,7 +34,6 @@ void SnakeGame::run() {
   while (!gameOver) {
       isCleared = false;
       isCleared = board.isCleared(board.lengthCleared, board.growthCleared, board.poisonCleared, board.gateCleared);
-
     if(!isCleared){
       stage = board.getCurrentStage();
       current_map = map.getMap(stage);
@@ -62,7 +61,11 @@ void SnakeGame::run() {
       refresh();
       snake.resetSnake(WIDTH, HEIGHT);
       board.resetScore();
-      cin >> isCleared;
+      isCleared = false;
+      nodelay(stdscr, FALSE);
+      getch();
+      timeout(100);
+
     }
   }
   endwin();

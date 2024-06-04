@@ -52,10 +52,7 @@ ScoreBoard::ScoreBoard(){
 }
 void ScoreBoard::drawBoard(){
   currentStage = getCurrentStage();
-  currentMission = mission.getMission(currentStage);
-  string current_str = to_string(currentMission[0]) + to_string(currentMission[1]);
-  mvprintw(23, 4, current_str.c_str());
-  
+  currentMission = mission.getMission(currentStage);  
   for (int y = 0; y<BOARD_H; ++y){
     for (int x=0; x<BOARD_W; ++x){
       if(scoreBoard[y][x] == 1){
