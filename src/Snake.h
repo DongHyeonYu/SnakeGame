@@ -13,6 +13,7 @@ public:
     void grow();
     int getLength();
     void gateEntry(const pair<int, int> pos, const Direction dir);
+    void resetSnake(int width=30, int height=30);
 
     Direction gateDicisionDir(int width, int height, Direction dir, const pair<int, int> pos, const vector<vector<int>>& map);
 

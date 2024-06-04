@@ -1,8 +1,10 @@
 #include "SnakeGame.h" // Header File
 #include <iostream>
 
+int stage = 0;
 Map map(0);
 vector<vector<int>> current_map = map.getMap(0);
+  
 
 const int WIDTH = map.getWidth();
 const int HEIGHT = map.getHeight();
@@ -28,33 +30,54 @@ void SnakeGame::init() {
 }
 
 void SnakeGame::run() {
+  
   while (!gameOver) {
-    draw(current_map);
-    if (checkCollision()) {
-      endGame();
+      isCleared = false;
+      isCleared = board.isCleared(board.lengthCleared, board.growthCleared, board.poisonCleared, board.gateCleared);
+
+    if(!isCleared){
+      stage = board.getCurrentStage();
+      current_map = map.getMap(stage);
+      draw(current_map);
+      if (checkCollision()) {
+        endGame();
+      }
+      if(!input()){
+        goForward();
+      }
+      manageItems();
+      manageGate();
+    
+      checkItemCollision();
+      if (gate.getTime() > 0) checkGateEnter();
+      usleep(100000);
     }
-    if(!input()){
-      goForward();
+    if(isCleared){
+      isCleared = false;
+      clear();
+      mvprintw(10, 28, "================");
+      mvprintw(11, 28, "* Stage Clear! *");
+      mvprintw(12, 28, "================");
+      mvprintw(14, 28, "    Press Key...");
+      refresh();
+      snake.resetSnake(WIDTH, HEIGHT);
+      board.resetScore();
+      cin >> isCleared;
     }
-    manageItems();
-    manageGate();
-    checkItemCollision();
-    if (gate.getTime() > 0) checkGateEnter();
-    usleep(100000);
   }
   endwin();
 }
 
-void SnakeGame::draw(const vector<vector<int>> &current_map) {
+void SnakeGame::draw(vector<vector<int>> &current_map) {
     clear();
-
-    const wchar_t wall = L'◼';
+    const wchar_t wall = L'■';
     const wchar_t head = L'●';
     const wchar_t body = L'○';
     const wchar_t space = ' ';
     const wchar_t growthItem = L'▲';
     const wchar_t poisonItem = L'▼';
-    const wchar_t gatemark = L'▢'; // 게이트 표시
+    const wchar_t gatemark = L'□'; // 게이트 표시
+    
 
     for (int y = 0; y < HEIGHT; ++y) {
         for (int x = 0; x < WIDTH; ++x) {
@@ -68,7 +91,7 @@ void SnakeGame::draw(const vector<vector<int>> &current_map) {
                         if (s == 0) {
                             mvaddnwstr(y, x * 2, &head, 1); // Head
                         } else {
-                            mvaddnwstr(y, x * 2, &body, 1); // Body
+                            mvaddnwstr(y, x * 2, &body, 1); // Body                        
                         }
                         isSnakePart = true;
                         break;
@@ -80,8 +103,14 @@ void SnakeGame::draw(const vector<vector<int>> &current_map) {
                     for (int s = 0; s < items.size(); ++s) {
                         if (items[s].getPosition().first == y && items[s].getPosition().second == x) {
                             if (items[s].getIsGrowth()) {
+                            //Need to Adjustment
+                                current_map[y][x] = 5;
+                            //===================
                                 mvaddnwstr(y, x * 2, &growthItem, 1); // Growth Item
                             } else {
+                            //Need to Adjustment
+                            	 current_map[y][x] = 6;
+                            //===================
                                 mvaddnwstr(y, x * 2, &poisonItem, 1); // Poison Item
                             }
                             isItemPart = true;
@@ -89,11 +118,13 @@ void SnakeGame::draw(const vector<vector<int>> &current_map) {
                         }
                     }
                     if (!isItemPart) {
+                        current_map[y][x] = 0;
                         mvaddnwstr(y, x * 2, &space, 1); // Empty space
                     }
                 }
             }
-
+            board.drawBoard();
+            board.printScore();
             // Gate 표시를 벽과 다른 순서로 처리하여 위치 조정
             if (gate.getTime() >= 0) { // 게이트가 활성화된 상태일 때만 그리기
                 bool isGate = (y == gate.getGate1Pos().first && x == gate.getGate1Pos().second) || (y == gate.getGate2Pos().first && x == gate.getGate2Pos().second);
@@ -233,9 +264,15 @@ bool SnakeGame::checkItemCollision(){
   for (auto it = items.begin(); it != items.end(); ) {
       if (head == it->getPosition()) {
           if (it->getIsGrowth()) {
+              //Need to Adjustment
+              board.increase(5);
+              //===================
               snake.grow();
           } else {
               if (snake.getLength() > 3) { // snake의 몸이 3이하면 사망
+              //Need to Adjustment
+                  board.increase(6);
+              //===================
                   snake.body.pop_back();
               } else {
                   endGame();
@@ -253,11 +290,15 @@ bool SnakeGame::checkItemCollision(){
 void SnakeGame::checkGateEnter(){
   auto head = snake.body.front();
   if(head.first == gate.getGate1Pos().first && head.second == gate.getGate1Pos().second){
+  //===================
+    board.increase(7);
+  //===================
     snake.dir = snake.gateDicisionDir(map.getHeight(), map.getWidth(), snake.dir, gate.getGate2Pos(), current_map);
     snake.gateEntry(gate.getGate2Pos(), snake.dir);
     gate.pauseTime();
     head_lc = snake.body.front();
   } else if(head.first == gate.getGate2Pos().first && head.second == gate.getGate2Pos().second){
+    board.increase(7);
     snake.dir = snake.gateDicisionDir(map.getHeight(), map.getWidth(), snake.dir, gate.getGate1Pos(), current_map);
     snake.gateEntry(gate.getGate1Pos(), snake.dir);
     gate.pauseTime();
@@ -268,7 +309,10 @@ void SnakeGame::checkGateEnter(){
 
 void SnakeGame::endGame() {
   gameOver = true;
-  mvprintw(HEIGHT / 2, WIDTH / 2 - 5, "Game Over!");
+  mvprintw(10, 28, "================");
+  mvprintw(11, 28, "*   Game Over  *");
+  mvprintw(12, 28, "================");
+  mvprintw(14, 28, "    Press Key...");
   refresh();
   nodelay(stdscr, FALSE);
   getch();

@@ -6,10 +6,11 @@
 using namespace std;
 
 class Gate {
-    pair<int, int> g1pos, g2pos;
+    pair<int, int> g1pos;
+    pair<int, int> g2pos;
     int curTime;
-    int pausedTime; // 일시정지 시간 저장
     bool isPaused;
+    int pausedTime;
 
 public:
     Gate(int width, int height);
@@ -17,12 +18,10 @@ public:
     void genGate(int width, int height, const vector<vector<int>>& map, const deque<pair<int, int>>& snakeBody);
     pair<int, int> getGate1Pos();
     pair<int, int> getGate2Pos();
-    
-    void setTime(int t);
-    int getTime();
-
     void pauseTime();
     void resumeTime();
+    void setTime(int t);
+    int getTime();
 };
 
 #endif

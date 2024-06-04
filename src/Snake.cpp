@@ -87,3 +87,12 @@ void Snake::grow(){
 int Snake::getLength(){
     return body.size();
 }
+void Snake::resetSnake(int width, int height){
+    body.clear();
+    dir = LEFT; // 처음엔 LEFT로 
+    // 초기 Snake의 위치는 가운데
+    body.push_back(make_pair(height/2, width/2-1));
+    body.push_back(make_pair(height/2, width/2));
+    body.push_back(make_pair(height/2, width/2+1));
+}
+
