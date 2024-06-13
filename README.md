@@ -6,8 +6,8 @@
 
 ## How to RUN?
 #### g++ -o snake <every .cpp files> -lncursesw<br>
-    g++ -o snake main.cpp SnakeGame.cpp Snake.cpp Map.cpp Item.cpp Gate.cpp -lncursesw
-    ./snake
+    g++ -o snake main.cpp SnakeGame.cpp Snake.cpp Map.cpp Item.cpp Gate.cpp Mission.cpp ScoreBoard.cpp StageManager.cpp Score.cpp -lncursesw
+
 
 ## Unicode Character
     wall = L'◼'; 
