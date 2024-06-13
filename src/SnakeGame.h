@@ -14,30 +14,33 @@
 #include "Item.h"
 #include "Gate.h"
 #include "ScoreBoard.h"
-//#include "StageManager.h"
+#include "StageManager.h"
 
 using namespace std;
 
 class SnakeGame{
   void init();
-  void draw(vector<vector<int>> &current_map);
+  void draw(const vector<vector<int>> current_map);
   bool input();
   void goForward();
   bool checkCollision();
   void endGame();
   void manageItems();
   void manageGate();
-  bool checkItemCollision();
+  void checkItemCollision();
   void checkGateEnter();
-  
+  void makeMap();
+
   bool gameOver;
   bool isCleared;
-  
+  int stage;
+
   Snake snake;
   Gate gate;
   vector<Item> items;
   ScoreBoard board;
   StageManager stageManager;
+  Map map;
 
   static const int ITEM_DURATION = 50; // 아이템 지속시간 최대 5초
   static const int GATE_DURATION = 100; // 게이트 지속시간 최대 10초
