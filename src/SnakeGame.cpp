@@ -1,19 +1,17 @@
 #include "SnakeGame.h" // Header File
 #include <iostream>
 
-int stage = 0;
-Map map(0);
-vector<vector<int>> current_map = map.getMap(0);
-  
 int debug = 0;
-const int WIDTH = map.getWidth();
-const int HEIGHT = map.getHeight();
+Map refMap;
+const int WIDTH = refMap.getWidth();
+const int HEIGHT = refMap.getHeight();
+// 이거도 map에 width랑 height불러오는거 고쳐야할듯 
 
 pair<int, int> head_lc = make_pair(-1, -1);
 
 using namespace std;
  
-SnakeGame::SnakeGame() : gameOver(false), snake(WIDTH, HEIGHT), gate(WIDTH, HEIGHT) {
+SnakeGame::SnakeGame() : gameOver(false), snake(WIDTH, HEIGHT), gate(WIDTH, HEIGHT), stage(0) {
   init();
   srand(time(0));
 } 
@@ -34,24 +32,31 @@ void SnakeGame::run() {
   while (!gameOver) {
       isCleared = false;
       isCleared = board.isCleared(board.lengthCleared, board.growthCleared, board.poisonCleared, board.gateCleared);
+      stage = board.getCurrentStage();
     if(!isCleared){
       stage = board.getCurrentStage();
-      current_map = map.getMap(stage);
-      draw(current_map);
+
+      makeMap(); // map에 요소들 뱀, 아이템 위치 저장 시키고(현재는 map클래스의 map변수에다가 직접 변경)
+
+      draw(map.getMap(stage));
+
       if (checkCollision()) {
         endGame();
       }
+
       if(!input()){
         goForward();
       }
+
       manageItems();
       manageGate();
-    
+ 
       checkItemCollision();
+
       if (gate.getTime() > 0) checkGateEnter();
       usleep(100000);
     }
-    if(isCleared){
+    else{
       isCleared = false;
       clear();
       mvprintw(10, 28, "================");
@@ -71,7 +76,46 @@ void SnakeGame::run() {
   endwin();
 }
 
-void SnakeGame::draw(vector<vector<int>> &current_map) {
+void SnakeGame::makeMap(){
+  Map tmpMap;
+
+  vector<vector<int>> copiedMap = tmpMap.getMap(stage);
+
+  map.setAllMap(stage, tmpMap.getMap(stage));
+
+  // map에다가 아이템 그리기
+  for(int s = 0; s < items.size(); ++s){
+    int curY = items[s].getPosition().first;
+    int curX = items[s].getPosition().second;
+
+    if(items[s].getIsGrowth()){
+      map.setMap(stage, curY, curX, 5); // Growth Item은 5
+    }
+    else{
+      map.setMap(stage, curY, curX, 6); // Poison Item은 6
+    }
+  }
+
+  // map에다가 뱀 그리기
+  for (int s = 0; s < snake.getLength(); ++s) {
+    
+    int curY = snake.body[s].first;
+    int curX = snake.body[s].second;
+
+    // 만약 벽이면은 밑에 collision함수에서 충돌 알아서 처리하게 무시
+    if(map.getMap(stage)[curY][curX] == 1){
+      continue;
+    }
+
+    if (s == 0) {
+      map.setMap(stage, curY, curX, 3); // Head는 3
+    } else {
+      map.setMap(stage, curY, curX, 4); // Body는 4                        
+    }
+  }
+}
+
+void SnakeGame::draw(const vector<vector<int>> current_map) {
     clear();
     const wchar_t wall = L'■';
     const wchar_t head = L'●';
@@ -86,46 +130,23 @@ void SnakeGame::draw(vector<vector<int>> &current_map) {
         for (int x = 0; x < WIDTH; ++x) {
             if (current_map[y][x] == 1 || current_map[y][x] == 2) {
                 mvaddnwstr(y, x * 2, &wall, 1); // Wall
-            } else {
-                bool isSnakePart = false;
-
-                for (int s = 0; s < snake.getLength(); ++s) {
-                    if (snake.body[s].first == y && snake.body[s].second == x) {
-                        if (s == 0) {
-                            mvaddnwstr(y, x * 2, &head, 1); // Head
-                        } else {
-                            mvaddnwstr(y, x * 2, &body, 1); // Body                        
-                        }
-                        isSnakePart = true;
-                        break;
-                    }
-                }
-
-                if (!isSnakePart) {
-                    bool isItemPart = false;
-                    for (int s = 0; s < items.size(); ++s) {
-                        if (items[s].getPosition().first == y && items[s].getPosition().second == x) {
-                            if (items[s].getIsGrowth()) {
-                            //Need to Adjustment
-                                current_map[y][x] = 5;
-                            //===================
-                                mvaddnwstr(y, x * 2, &growthItem, 1); // Growth Item
-                            } else {
-                            //Need to Adjustment
-                            	 current_map[y][x] = 6;
-                            //===================
-                                mvaddnwstr(y, x * 2, &poisonItem, 1); // Poison Item
-                            }
-                            isItemPart = true;
-                            break;
-                        }
-                    }
-                    if (!isItemPart) {
-                        current_map[y][x] = 0;
-                        mvaddnwstr(y, x * 2, &space, 1); // Empty space
-                    }
-                }
+            } 
+            else if(current_map[y][x] ==3){
+              mvaddnwstr(y, x * 2, &head, 1); // Head
             }
+            else if(current_map[y][x] == 4){
+              mvaddnwstr(y, x * 2, &body, 1); // Body
+            }
+            else if(current_map[y][x] == 5){
+              mvaddnwstr(y, x * 2, &growthItem, 1); // Growth Item
+            }
+            else if(current_map[y][x] == 6){
+              mvaddnwstr(y, x * 2, &poisonItem, 1); // Growth Item
+            }
+            else{
+              mvaddnwstr(y, x * 2, &space, 1); // Empty space
+            }
+            
             board.drawBoard();
             board.printScore();
             // Gate 표시를 벽과 다른 순서로 처리하여 위치 조정
@@ -206,45 +227,49 @@ void SnakeGame::manageItems(){
     }
   }
 
+  vector<vector<int>> current_map = refMap.getMap(stage);
   // 최대 item은 3개
-  while(items.size() < MAX_ITEMS){
+  if(items.size() < MAX_ITEMS){
     Item newItem(WIDTH, HEIGHT);
 
-    bool onSnake = false;
+    pair<int, int> itemPos = newItem.getPosition();
 
-    // 만약 아이템 위치에 스네이크가 없으면 아이템 생성
-    for(int i=0; i< snake.getLength(); ++i){
-      if(snake.body[i] == newItem.getPosition()){
-        onSnake = true;
-        break;
+    if(current_map[itemPos.first][itemPos.second] != 0 ){
+      return;
+    }
+
+    for(int i=0; i<items.size(); ++i){
+      if(itemPos == items[i].getPosition()){
+        return;
       }
     }
 
-    if(!onSnake){
-      items.push_back(newItem);
-    }
+    items.push_back(newItem);
   }
 }
 
 void SnakeGame::manageGate(){
   gate.setTime(gate.getTime() + 1);
+  vector<vector<int>> current_map = map.getMap(stage);
 
     // 게이트가 GATE_DURATION보다 더 필드 위에 있으면 삭제하고 대기시간 시작
     if (gate.getTime() > GATE_DURATION) {
-        current_map[gate.getGate1Pos().first][gate.getGate1Pos().second] = 1;
-        current_map[gate.getGate2Pos().first][gate.getGate2Pos().second] = 1;
+        map.setMap(stage, gate.getGate1Pos().first, gate.getGate1Pos().second, 2);
+        map.setMap(stage, gate.getGate2Pos().first, gate.getGate2Pos().second, 2);
         gate.setTime(-GATE_COOLDOWN);
     }
 
     // 대기시간이 끝나면 새로운 게이트 생성
     if (gate.getTime() == 0) {
         gate.genGate(WIDTH, HEIGHT, current_map, snake.body);
-        current_map[gate.getGate1Pos().first][gate.getGate1Pos().second] = 0;
-        current_map[gate.getGate2Pos().first][gate.getGate2Pos().second] = 0;
+        map.setMap(stage, gate.getGate1Pos().first, gate.getGate1Pos().second, 0);
+        map.setMap(stage, gate.getGate2Pos().first, gate.getGate2Pos().second, 0);
     }
 }
 
 bool SnakeGame::checkCollision() {
+  vector<vector<int>> current_map = map.getMap(stage);
+
   pair<int, int> head = snake.body[0];
   int y = head.first;
   int x = head.second;
@@ -262,7 +287,7 @@ bool SnakeGame::checkCollision() {
   return false;
 }
 
-bool SnakeGame::checkItemCollision(){
+void SnakeGame::checkItemCollision(){
   auto head = snake.body.front();
   for (auto it = items.begin(); it != items.end(); ) {
       if (head == it->getPosition()) {
@@ -281,17 +306,20 @@ bool SnakeGame::checkItemCollision(){
                   endGame();
               }
           }
+          
           it = items.erase(it);
-          return true;
+          return;
       } else {
           ++it;
       }
   }
-  return false;
+  return;
 }
 
 void SnakeGame::checkGateEnter(){
   auto head = snake.body.front();
+  vector<vector<int>> current_map = map.getMap(stage);
+
   if(head.first == gate.getGate1Pos().first && head.second == gate.getGate1Pos().second){
   //===================
     board.increase(7);

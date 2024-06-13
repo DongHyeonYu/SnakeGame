@@ -1,7 +1,7 @@
 #include "Map.h"
 
 using namespace std;
-Map::Map(const int stage) {
+Map::Map() {
   map = { 
   	  //Stage1
   	  {
@@ -130,9 +130,15 @@ Map::Map(const int stage) {
   wall = L'◼';
   current_map = map[0];
 }
-vector<vector<int> > Map::getMap(const int stage){
+vector<vector<int>> Map::getMap(const int stage){
   current_map = map[stage];
   return current_map;
+}
+void Map::setMap(int stage, int y, int x, int val){
+	map[stage][y][x] = val;
+}
+void Map::setAllMap(int stage, const vector<vector<int>> newMap){
+	map[stage] = newMap;
 }
 int Map::getWidth(){
   return WIDTH;
