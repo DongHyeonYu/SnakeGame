@@ -195,18 +195,22 @@ bool SnakeGame::input() {
     case KEY_UP:
         if (snake.dir != DOWN && snake.dir != UP) snake.dir = UP;
         else if(snake.dir == UP) return false;
+        else if(snake.dir == DOWN) endGame();
         break;
     case KEY_DOWN:
         if (snake.dir != UP && snake.dir != DOWN) snake.dir = DOWN;
         else if(snake.dir == DOWN) return false;
+        else if(snake.dir == UP) endGame();
         break;
     case KEY_LEFT:
         if (snake.dir != RIGHT && snake.dir != LEFT) snake.dir = LEFT;
         else if(snake.dir == LEFT) return false;
+        else if(snake.dir == RIGHT) endGame();
         break;
     case KEY_RIGHT:
         if (snake.dir != LEFT && snake.dir != RIGHT) snake.dir = RIGHT;
         else if(snake.dir == RIGHT) return false;
+        else if(snake.dir == LEFT) endGame();
         break;
     default:
         return false;
