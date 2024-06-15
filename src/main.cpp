@@ -8,6 +8,7 @@ int main(){
   int flag = 0;
   while (true){
     SnakeGame game;
+    
     flag = credit.showMenu();
     if (flag == -1){
     	endwin();
