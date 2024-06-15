@@ -11,7 +11,7 @@ pair<int, int> head_lc = make_pair(-1, -1);
 
 using namespace std;
  
-SnakeGame::SnakeGame() : gameOver(false), snake(WIDTH, HEIGHT), gate(WIDTH, HEIGHT), stage(0) {
+SnakeGame::SnakeGame() : gameOver(false), snake(WIDTH, HEIGHT), gate(WIDTH, HEIGHT), stage(0), timeTick(100000) {
   init();
   srand(time(0));
 } 
@@ -28,7 +28,7 @@ void SnakeGame::init() {
 }
 
 void SnakeGame::run() {
-  
+  bool inputProcessed = false;
   while (!gameOver) {
       isCleared = false;
       isCleared = board.isCleared(board.lengthCleared, board.growthCleared, board.poisonCleared, board.gateCleared);
@@ -43,18 +43,20 @@ void SnakeGame::run() {
       if (checkCollision()) {
         endGame();
       }
-
-      if(!input()){
-        goForward();
+      if (!inputProcessed) {
+        inputProcessed = input();
       }
 
+      goForward();
       manageItems();
       manageGate();
  
       checkItemCollision();
 
       if (gate.getTime() > 0) checkGateEnter();
-      usleep(100000);
+      usleep(timeTick);
+
+      inputProcessed = false;
     }
     else{
       isCleared = false;
@@ -64,13 +66,13 @@ void SnakeGame::run() {
       mvprintw(12, 28, "================");
       mvprintw(14, 28, "    Press Key...");
       refresh();
+      timeTick = 100000;
       snake.resetSnake(WIDTH, HEIGHT);
       board.resetScore();
       isCleared = false;
       nodelay(stdscr, FALSE);
       getch();
       timeout(100);
-
     }
   }
   endwin();
@@ -88,11 +90,17 @@ void SnakeGame::makeMap(){
     int curY = items[s].getPosition().first;
     int curX = items[s].getPosition().second;
 
-    if(items[s].getIsGrowth()){
+    if(items[s].getItemType() == 0){
       map.setMap(stage, curY, curX, 5); // Growth Item은 5
     }
-    else{
+    else if(items[s].getItemType() == 1){
       map.setMap(stage, curY, curX, 6); // Poison Item은 6
+    }
+    else if(items[s].getItemType() == 2){
+      map.setMap(stage, curY, curX, 7);
+    }
+    else if(items[s].getItemType() == 3){
+      map.setMap(stage, curY, curX, 8);
     }
   }
 
@@ -124,7 +132,8 @@ void SnakeGame::draw(const vector<vector<int>> current_map) {
     const wchar_t growthItem = L'▲';
     const wchar_t poisonItem = L'▼';
     const wchar_t gatemark = L'□'; // 게이트 표시
-    
+    const wchar_t fastItem = L'⏩';
+    const wchar_t slowItem = L'⏪';
 
     for (int y = 0; y < HEIGHT; ++y) {
         for (int x = 0; x < WIDTH; ++x) {
@@ -142,6 +151,12 @@ void SnakeGame::draw(const vector<vector<int>> current_map) {
             }
             else if(current_map[y][x] == 6){
               mvaddnwstr(y, x * 2, &poisonItem, 1); // Growth Item
+            }
+            else if(current_map[y][x] == 7){
+              mvaddnwstr(y, x * 2, &fastItem, 1); // Growth Item
+            }
+            else if(current_map[y][x] == 8){
+              mvaddnwstr(y, x * 2, &slowItem, 1); // Growth Item
             }
             else{
               mvaddnwstr(y, x * 2, &space, 1); // Empty space
@@ -167,52 +182,30 @@ void SnakeGame::goForward() {
     snake.move();
 }
 
+
 bool SnakeGame::input() {
   int ch = getch();
   switch (ch) {
     case KEY_UP:
-        if (snake.dir != DOWN){
-          snake.dir = UP;
-        }
-        else{
-          endGame();
-        }
+        if (snake.dir != DOWN && snake.dir != UP) snake.dir = UP;
+        else if(snake.dir == UP) return false;
         break;
     case KEY_DOWN:
-        if (snake.dir != UP){
-            snake.dir = DOWN;
-
-        }
-        else{
-            endGame();
-        }
+        if (snake.dir != UP && snake.dir != DOWN) snake.dir = DOWN;
+        else if(snake.dir == DOWN) return false;
         break;
     case KEY_LEFT:
-        if (snake.dir != RIGHT){
-            snake.dir = LEFT;
-
-        }
-        else{
-            endGame();
-        }
+        if (snake.dir != RIGHT && snake.dir != LEFT) snake.dir = LEFT;
+        else if(snake.dir == LEFT) return false;
         break;
     case KEY_RIGHT:
-        if (snake.dir != LEFT){
-            snake.dir = RIGHT;
-
-        }
-        else{
-            endGame();
-        }
+        if (snake.dir != LEFT && snake.dir != RIGHT) snake.dir = RIGHT;
+        else if(snake.dir == RIGHT) return false;
         break;
-    }
-  snake.move();
-  if(ch){
-    return true;
+    default:
+        return false;
   }
-  else{
-    return false;
-  }
+  return true;
 }
 
 void SnakeGame::manageItems(){
@@ -291,12 +284,12 @@ void SnakeGame::checkItemCollision(){
   auto head = snake.body.front();
   for (auto it = items.begin(); it != items.end(); ) {
       if (head == it->getPosition()) {
-          if (it->getIsGrowth()) {
+          if (it->getItemType() == 0) {
               //Need to Adjustment
               board.increase(5);
               //===================
               snake.grow();
-          } else {
+          } else if (it->getItemType() == 1){
               if (snake.getLength() > 3) { // snake의 몸이 3이하면 사망
               //Need to Adjustment
                   board.increase(6);
@@ -305,6 +298,12 @@ void SnakeGame::checkItemCollision(){
               } else {
                   endGame();
               }
+          }
+          else if(it->getItemType() == 2){
+            timeTick /= 1.5;
+          }
+          else if(it->getItemType() == 3){
+            timeTick *= 1.5;
           }
           
           it = items.erase(it);
