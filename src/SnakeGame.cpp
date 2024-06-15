@@ -65,6 +65,9 @@ void SnakeGame::run() {
       mvprintw(10, 33, "* Stage Clear! *");
       mvprintw(11, 33, "================");
       mvprintw(13, 33, "    Press Key...");
+      if(stage == 5){
+        allStageClear();
+      }
       refresh();
       timeTick = 100000;
       snake.resetSnake(WIDTH, HEIGHT);
@@ -356,4 +359,14 @@ void SnakeGame::endGame() {
   refresh();
   nodelay(stdscr, FALSE);
   getch();
+}
+
+void SnakeGame::allStageClear() {
+  gameOver = true;
+  clear();
+  mvprintw(9, 29,  "=======================");
+  mvprintw(10, 29, "*   congratulation!   *");
+  mvprintw(11, 29, "*  All Stage Cleared! *");
+  mvprintw(12, 29, "=======================");
+  mvprintw(14, 29, "      Press Key...");
 }

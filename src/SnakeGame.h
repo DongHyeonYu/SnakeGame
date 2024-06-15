@@ -30,6 +30,7 @@ class SnakeGame{
   void checkItemCollision();
   void checkGateEnter();
   void makeMap();
+  void allStageClear();
 
   bool gameOver;
   bool isCleared;
