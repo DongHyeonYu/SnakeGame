@@ -141,19 +141,19 @@ int Credit::showMenu(){
 }
 void Credit::showHowToPlay()
 {
-  wstring rule0, rule1, rule2, rule3, rule4, rule5, rule6, rule7, rule8, rule9, rule10;
+  wstring rule0, rule1, rule2, rule3, rule4, rule5, rule6, rule7, rule8, rule9, rule10, rule11;
   rule0 = L"How To Play?";
   rule1 = L"1. You can change the direction with the input.";
   rule2 = L"2. If you hit the wall, the game will end.";
   rule3 = L"3. If press the key in the direction of your body, the game will end.";
   rule4 = L"4. The game ends when the length of the snake becomes 3 or less.";
   rule5 = L"5. If you clear the mission, you will move on to the next stage.";
-  rule6 = L"6. The stage consists of 5 stages.";
-  rule7 = L"==============================Item====================================";
-  rule8 = L"▲ : Growth Item. When you eat it, its length becomes longer.";
-  rule9 = L"▼ : Poison Item. When you eat it, its length becomes shorter.";
-  rule10 = L"□ : Gate. When you go in, you come out on the other side.";
-  
+  rule6 = L"==============================Item====================================";
+  rule7 = L"🍎 : Growth Item. When you eat it, its length becomes longer.";
+  rule8 = L"💀 : Poison Item. When you eat it, its length becomes shorter.";
+  rule9 = L"🌀 : Gate. When you go in, you come out on the other side.";
+  rule10 = L"⏩ : SpeedUP. When you eat it, make you faster";
+  rule11 = L"⏪ : SpeedDown. When you eat it, make you slower";
   clear();
   for (int y = 0; y<HEIGHT; ++y){
     for (int x = 0; x<WIDTH; ++x){
@@ -167,11 +167,13 @@ void Credit::showHowToPlay()
   mvprintw(8, 4, "%ls", rule3.c_str());
   mvprintw(10, 4, "%ls", rule4.c_str());
   mvprintw(12, 4, "%ls", rule5.c_str());
+  
   mvprintw(14, 4, "%ls", rule6.c_str());
   mvprintw(16, 4, "%ls", rule7.c_str());
-  mvprintw(18, 4, "%ls", rule8.c_str());
-  mvprintw(19, 4, "%ls", rule9.c_str());
-  mvprintw(20, 4, "%ls", rule10.c_str());
+  mvprintw(17, 4, "%ls", rule8.c_str());
+  mvprintw(18, 4, "%ls", rule9.c_str());
+  mvprintw(19, 4, "%ls", rule10.c_str());
+  mvprintw(20, 4, "%ls", rule11.c_str());
   refresh();
   int ch1;
   while (true){

@@ -31,7 +31,8 @@ class ScoreBoard{
   wstring lengthProgressBar, growthProgressBar, poisonProgressBar, gateProgressBar;
   string LENGTH, GROWTH, POISON, GATE;
   int lengthScore, growthScore, poisonScore, gateScore;
-  int currentStage; 
+  int currentStage;
+  int adjust; 
 public:  
   ScoreBoard();
   

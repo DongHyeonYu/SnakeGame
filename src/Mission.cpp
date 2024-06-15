@@ -2,8 +2,8 @@
 
 Mission::Mission(){
   //{bodyLength, growthItem, poisonItem, Gate}
-  stage1 = {3,0,0,0};
-  //stage1 = {5,3,1,1};
+  //stage1 = {3,0,0,0};
+  stage1 = {5,3,1,1};
   //stage2 = {3,0,0,0};
   stage2 = {7,5,2,2};
   //stage3 = {3,0,0,0};

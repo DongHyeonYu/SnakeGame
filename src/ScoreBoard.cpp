@@ -1,5 +1,6 @@
 #include "ScoreBoard.h"
 ScoreBoard::ScoreBoard(){
+  adjust = 4;
   currentMission = mission.getMission(0);
   setlocale(LC_ALL, "");
   LENGTH = ("LEGNTH | " + to_string(currentMission[0]));
@@ -49,39 +50,39 @@ ScoreBoard::ScoreBoard(){
   		{2,0,1,0,0,0,0,0,0,0,0,0,0,0,1},
   		{2,0,1,1,1,1,1,1,1,1,1,1,1,1,1},
 		};
+		
 }
 void ScoreBoard::drawBoard(){
+
   currentStage = getCurrentStage();
   currentMission = mission.getMission(currentStage);  
   for (int y = 0; y<BOARD_H; ++y){
     for (int x=0; x<BOARD_W; ++x){
       if(scoreBoard[y][x] == 1){
-        mvaddnwstr(y, x*2+MAP_W, &boardWall, 1);
-      }
-      if(scoreBoard[y][x] == 2){
-        mvaddnwstr(y, x*2+MAP_W, &partition, 1);
+        mvaddnwstr(y+1, x*2+MAP_W+adjust, &boardWall, 1);
       }
     }
   }
+
   
   //ScoreBoard Template
-  mvaddstr(0, 6+MAP_W, "====== MISSION =======");
-  LENGTH = ("LEGNTH | " + to_string(currentMission[0]));
-  GROWTH = ("GROWTH | " + to_string(currentMission[1]));
-  POISON = ("POISON | " + to_string(currentMission[2]));
-  GATE   = ("  GATE | " + to_string(currentMission[3]));
+  mvaddstr(1, 6+MAP_W+adjust, "====== MISSION =======");
+  LENGTH = ("LEGNTH |     / " + to_string(currentMission[0]));
+  GROWTH = ("GROWTH |     / " + to_string(currentMission[1]));
+  POISON = ("POISON |     / " + to_string(currentMission[2]));
+  GATE   = ("  GATE |     / " + to_string(currentMission[3]));
   
-  mvaddstr(2, CHAR_X, LENGTH.c_str());
-  mvaddstr(4, CHAR_X, GROWTH.c_str());
-  mvaddstr(6, CHAR_X, POISON.c_str());
-  mvaddstr(8, CHAR_X, GATE.c_str());
+  mvaddstr(3, CHAR_X+adjust, LENGTH.c_str());
+  mvaddstr(5, CHAR_X+adjust, GROWTH.c_str());
+  mvaddstr(7, CHAR_X+adjust, POISON.c_str());
+  mvaddstr(9, CHAR_X+adjust, GATE.c_str());
   
   
-  mvaddstr(10, 6+MAP_W, "====== PROGRESS ======");
-  mvaddstr(12, CHAR_X, "LEGNTH  ");
-  mvaddstr(14, CHAR_X, "GROWTH  ");
-  mvaddstr(16, CHAR_X, "POISON  ");
-  mvaddstr(18, CHAR_X, "  GATE  ");
+  mvaddstr(11, 6+MAP_W+adjust, "====== PROGRESS ======");
+  mvaddstr(13, CHAR_X+adjust, "LEGNTH  ");
+  mvaddstr(15, CHAR_X+adjust, "GROWTH  ");
+  mvaddstr(17, CHAR_X+adjust, "POISON  ");
+  mvaddstr(19, CHAR_X+adjust, "  GATE  ");
 }   
 void ScoreBoard::printScore(){
   currentStage = stageManager.getCurrentStage();
@@ -230,36 +231,36 @@ void ScoreBoard::printScore(){
       break;
   }
   
-  mvprintw(12, CHAR_X + 7, "%ls", lengthProgressBar.c_str()); 
-  mvprintw(14, CHAR_X + 7, "%ls", growthProgressBar.c_str()); 
-  mvprintw(16, CHAR_X + 7, "%ls", poisonProgressBar.c_str()); 
-  mvprintw(18, CHAR_X + 7, "%ls", gateProgressBar.c_str()); 
+  mvprintw(13, CHAR_X + 7+adjust, "%ls", lengthProgressBar.c_str()); 
+  mvprintw(15, CHAR_X + 7+adjust, "%ls", growthProgressBar.c_str()); 
+  mvprintw(17, CHAR_X + 7+adjust, "%ls", poisonProgressBar.c_str()); 
+  mvprintw(19, CHAR_X + 7+adjust, "%ls", gateProgressBar.c_str()); 
   
-  mvaddstr(12, CHAR_X + 17, "( )"); 
-  mvaddstr(14, CHAR_X + 17, "( )"); 
-  mvaddstr(16, CHAR_X + 17, "( )"); 
-  mvaddstr(18, CHAR_X + 17, "( )");
+  mvaddstr(13, CHAR_X + 17+adjust, "( )"); 
+  mvaddstr(15, CHAR_X + 17+adjust, "( )"); 
+  mvaddstr(17, CHAR_X + 17+adjust, "( )"); 
+  mvaddstr(19, CHAR_X + 17+adjust, "( )");
   
   
   if(lengthScore >= currentMission[0]){
   	lengthCleared = true;
-  	mvaddstr(12, CHAR_X + 18, "V"); 
+  	mvaddstr(13, CHAR_X + 18+adjust, "V"); 
   } 
   else{
   	lengthCleared = false;
-  	mvaddstr(12, CHAR_X + 18, " "); 
+  	mvaddstr(13, CHAR_X + 18+adjust, " "); 
   }
   if(growthScore >= currentMission[1]){
   	growthCleared = true;
-  	mvaddstr(14, CHAR_X + 18, "V"); 
+  	mvaddstr(15, CHAR_X + 18+adjust, "V"); 
   }
   if(poisonScore >= currentMission[2]){
   	poisonCleared = true;
-  	mvaddstr(16, CHAR_X + 18, "V"); 
+  	mvaddstr(17, CHAR_X + 18+adjust, "V"); 
   }
   if(gateScore >= currentMission[3]){
   	gateCleared = true;
-  	mvaddstr(18, CHAR_X + 18, "V"); 
+  	mvaddstr(19, CHAR_X + 18+adjust, "V"); 
   }
   
 }

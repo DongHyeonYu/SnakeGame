@@ -61,10 +61,10 @@ void SnakeGame::run() {
     else{
       isCleared = false;
       clear();
-      mvprintw(10, 28, "================");
-      mvprintw(11, 28, "* Stage Clear! *");
-      mvprintw(12, 28, "================");
-      mvprintw(14, 28, "    Press Key...");
+      mvprintw(9, 33, "================");
+      mvprintw(10, 33, "* Stage Clear! *");
+      mvprintw(11, 33, "================");
+      mvprintw(13, 33, "    Press Key...");
       refresh();
       timeTick = 100000;
       snake.resetSnake(WIDTH, HEIGHT);
@@ -125,41 +125,47 @@ void SnakeGame::makeMap(){
 
 void SnakeGame::draw(const vector<vector<int>> current_map) {
     clear();
-    const wchar_t wall = L'■';
-    const wchar_t head = L'●';
-    const wchar_t body = L'○';
+    const wchar_t wall = L'🧱';
+    const wchar_t head = L'😈';
+    const wchar_t body = L'🟣';
     const wchar_t space = ' ';
-    const wchar_t growthItem = L'▲';
-    const wchar_t poisonItem = L'▼';
-    const wchar_t gatemark = L'□'; // 게이트 표시
+    const wchar_t growthItem = L'🍎';
+    const wchar_t poisonItem = L'💀';
+    const wchar_t gatemark = L'🌀';
     const wchar_t fastItem = L'⏩';
     const wchar_t slowItem = L'⏪';
-
+    const wchar_t block = L'■';
+    const wstring border = L"■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■"; 
+    mvprintw(0, 0, "%ls", border.c_str());
+    mvprintw(22, 0, "%ls", border.c_str());
+    int adjust = 4;
     for (int y = 0; y < HEIGHT; ++y) {
         for (int x = 0; x < WIDTH; ++x) {
+            mvaddnwstr(y+1,0, &block, 1); 
+            mvaddnwstr(y+1,78, &block, 1);
             if (current_map[y][x] == 1 || current_map[y][x] == 2) {
-                mvaddnwstr(y, x * 2, &wall, 1); // Wall
+                mvaddnwstr(y+1, x * 2+adjust, &wall, 1); // Wall
             } 
             else if(current_map[y][x] ==3){
-              mvaddnwstr(y, x * 2, &head, 1); // Head
+              mvaddnwstr(y+1, x * 2+adjust, &head, 1); // Head
             }
             else if(current_map[y][x] == 4){
-              mvaddnwstr(y, x * 2, &body, 1); // Body
+              mvaddnwstr(y+1, x * 2+adjust, &body, 1); // Body
             }
             else if(current_map[y][x] == 5){
-              mvaddnwstr(y, x * 2, &growthItem, 1); // Growth Item
+              mvaddnwstr(y+1, x * 2+adjust, &growthItem, 1); // Growth Item
             }
             else if(current_map[y][x] == 6){
-              mvaddnwstr(y, x * 2, &poisonItem, 1); // Growth Item
+              mvaddnwstr(y+1, x * 2+adjust, &poisonItem, 1); // Growth Item
             }
             else if(current_map[y][x] == 7){
-              mvaddnwstr(y, x * 2, &fastItem, 1); // Growth Item
+              mvaddnwstr(y+1, x * 2+adjust, &fastItem, 1); // Fast Item
             }
             else if(current_map[y][x] == 8){
-              mvaddnwstr(y, x * 2, &slowItem, 1); // Growth Item
+              mvaddnwstr(y+1, x * 2+adjust, &slowItem, 1); // Slow Item
             }
             else{
-              mvaddnwstr(y, x * 2, &space, 1); // Empty space
+              mvaddnwstr(y+1, x * 2+adjust, &space, 1); // Empty space
             }
             
             board.drawBoard();
@@ -169,7 +175,7 @@ void SnakeGame::draw(const vector<vector<int>> current_map) {
                 bool isGate = (y == gate.getGate1Pos().first && x == gate.getGate1Pos().second) || (y == gate.getGate2Pos().first && x == gate.getGate2Pos().second);
 
                 if (isGate) {
-                    mvaddnwstr(y, x * 2, &gatemark, 1); // Gate
+                    mvaddnwstr(y+1, x * 2+adjust, &gatemark, 1); // Gate
                 }
             }
         }
@@ -339,10 +345,10 @@ void SnakeGame::checkGateEnter(){
 
 void SnakeGame::endGame() {
   gameOver = true;
-  mvprintw(10, 28, "================");
-  mvprintw(11, 28, "*   Game Over  *");
-  mvprintw(12, 28, "================");
-  mvprintw(14, 28, "    Press Key...");
+  mvprintw(9, 33, "================");
+  mvprintw(10, 33, "*   Game Over  *");
+  mvprintw(11, 33, "================");
+  mvprintw(13, 33, "    Press Key...");
   refresh();
   nodelay(stdscr, FALSE);
   getch();
