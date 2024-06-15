@@ -4,7 +4,7 @@ using namespace std;
 class Item {
     pair<int, int> pos;
     int curTime;
-    bool isGrowth;
+    int itemType;
 
 public:
     Item(int width, int height);
@@ -13,7 +13,7 @@ public:
 
     pair<int, int> getPosition();
 
-    bool getIsGrowth();
+    int getItemType();
 
     void setTime(int t);
 

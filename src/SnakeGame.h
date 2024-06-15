@@ -34,6 +34,7 @@ class SnakeGame{
   bool gameOver;
   bool isCleared;
   int stage;
+  int timeTick;
 
   Snake snake;
   Gate gate;
