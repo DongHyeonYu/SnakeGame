@@ -94,11 +94,10 @@ void ScoreBoard::printScore(){
   poisonScore = currentScore[2];
   gateScore = currentScore[3];
   
-
-  //mvaddstr(12, CHAR_X + 9, to_string(lengthScore).c_str()); 
-  //mvaddstr(14, CHAR_X + 9, to_string(growthScore).c_str()); 
-  //mvaddstr(16, CHAR_X + 9, to_string(poisonScore).c_str()); 
-  //mvaddstr(18, CHAR_X + 9, to_string(gateScore).c_str()); 
+  mvaddstr(3, CHAR_X+14, to_string(lengthScore).c_str());
+  mvaddstr(5, CHAR_X+14, to_string(growthScore).c_str());
+  mvaddstr(7, CHAR_X+14, to_string(poisonScore).c_str());
+  mvaddstr(9, CHAR_X+14, to_string(gateScore).c_str());
   
   switch (currentStage){
     //Stage 1
@@ -230,6 +229,7 @@ void ScoreBoard::printScore(){
       else if(gateScore >=5) gateProgressBar = L"■ ■ ■ ■ ■";
       break;
   }
+
   
   mvprintw(13, CHAR_X + 7+adjust, "%ls", lengthProgressBar.c_str()); 
   mvprintw(15, CHAR_X + 7+adjust, "%ls", growthProgressBar.c_str()); 
