@@ -25,4 +25,5 @@
     ○ : \u25cb
 
 ## InGame
+<img src="assets/snake-game-rule.png" width=50% height=auto>
 <img src="assets/snake-game-ingame1.png" width=50% height=auto>
