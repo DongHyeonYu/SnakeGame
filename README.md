@@ -1,15 +1,16 @@
 # 🐍**SNAKE GAME**
-국민대학교 C++ SNAKE GAME Project
-
-## Stack 
+Kookmin Univ. C++ SNAKE GAME Project<br>
 <img src="https://img.shields.io/badge/c++-00599C?style=flat-square&logo=c%2B%2B&logoColor=white"/></a>
 
 ## How to RUN?
+#### Install libncurses
+    $ sudo apt-get update && sudo apt-get install libncurses5-dev libncursesw5-dev
+
 #### g++ -o snake <every .cpp files> -lncursesw<br>
-    g++ -o snake main.cpp SnakeGame.cpp Snake.cpp Map.cpp Item.cpp Gate.cpp Mission.cpp ScoreBoard.cpp StageManager.cpp Score.cpp -lncursesw
+    $ g++ -o snake main.cpp SnakeGame.cpp Snake.cpp Map.cpp Item.cpp Gate.cpp Mission.cpp ScoreBoard.cpp StageManager.cpp Score.cpp -lncursesw
 
 #### or just use make
-    make
+    $ make
 
 
 ## Unicode Character
@@ -20,35 +21,3 @@
     ◼ : \u25fc
     ● : \u25cf
     ○ : \u25cb
-
-## Characters with ncurses library
-Upper left corner           ┌</br>
-Lower left corner           └</br>
-Lower right corner          ┘</br>
-Tee pointing right          ├</br>
-Tee pointing left           ┤</br>
-Tee pointing up             ┴</br>
-Tee pointing down           ┬</br>
-Horizontal line             ─</br>
-Vertical line               │</br>
-Large Plus or cross over    ┼</br>
-Scan Line 1                 ⎺</br>
-Scan Line 3                 ⎻</br>
-Scan Line 7                 ⎼</br>
-Scan Line 9                 ⎽</br>
-Diamond                     ♦</br>
-Checker board (stipple)     ▒</br>
-Degree Symbol               °</br>
-Plus/Minus Symbol           ±</br>
-Bullet                      ·</br>
-Arrow Pointing Left         <</br>
-Arrow Pointing Right        ></br>
-Arrow Pointing Down         v</br>
-Arrow Pointing Up           ^</br>
-Board of squares            #</br>
-Lantern Symbol              ␋</br>
-Solid Square Block          #</br>
-Less/Equal sign             ≤</br>
-Greater/Equal sign          ≥</br>
-Pi                          π</br>
-Not equal                   ≠UK pound sign               £
