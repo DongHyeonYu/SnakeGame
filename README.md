@@ -1,6 +1,8 @@
 # 🐍**SNAKE GAME**
-Kookmin Univ. C++ SNAKE GAME Project<br>
-<img src="https://img.shields.io/badge/c++-00599C?style=flat-square&logo=c%2B%2B&logoColor=white"/></a>
+<div align="center">
+    Kookmin Univ. C++ SNAKE GAME Project<br><br>
+    <img src="assets/snake-game-logo.png">
+</div>
 
 ## How to RUN?
 #### Install libncurses
@@ -23,4 +25,4 @@ Kookmin Univ. C++ SNAKE GAME Project<br>
     ○ : \u25cb
 
 ## InGame
-
+<img src="assets/snake-game-ingame1.png" width=50% height=auto>
