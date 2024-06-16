@@ -1,5 +1,6 @@
 #include "ScoreBoard.h"
 ScoreBoard::ScoreBoard(){
+  TIME = time(NULL);
   adjust = 4;
   currentMission = mission.getMission(0);
   setlocale(LC_ALL, "");
@@ -48,12 +49,12 @@ ScoreBoard::ScoreBoard(){
   		{2,0,1,0,0,0,0,0,0,0,0,0,0,0,1},
   		{2,0,1,0,0,0,0,0,0,0,0,0,0,0,1},
   		{2,0,1,0,0,0,0,0,0,0,0,0,0,0,1},
-  		{2,0,1,1,1,1,1,1,1,1,1,1,1,1,1},
+  		{2,0,1,0,0,0,0,0,0,0,0,0,0,0,1},
 		};
 		
 }
 void ScoreBoard::drawBoard(){
-
+  
   currentStage = getCurrentStage();
   currentMission = mission.getMission(currentStage);  
   for (int y = 0; y<BOARD_H; ++y){
@@ -71,7 +72,8 @@ void ScoreBoard::drawBoard(){
   GROWTH = ("GROWTH |     / " + to_string(currentMission[1]));
   POISON = ("POISON |     / " + to_string(currentMission[2]));
   GATE   = ("  GATE |     / " + to_string(currentMission[3]));
-  
+
+ 
   mvaddstr(3, CHAR_X+adjust, LENGTH.c_str());
   mvaddstr(5, CHAR_X+adjust, GROWTH.c_str());
   mvaddstr(7, CHAR_X+adjust, POISON.c_str());
@@ -83,16 +85,18 @@ void ScoreBoard::drawBoard(){
   mvaddstr(15, CHAR_X+adjust, "GROWTH  ");
   mvaddstr(17, CHAR_X+adjust, "POISON  ");
   mvaddstr(19, CHAR_X+adjust, "  GATE  ");
+  mvaddstr(21, CHAR_X+adjust, "  TIME   |");
 }   
 void ScoreBoard::printScore(){
   currentStage = stageManager.getCurrentStage();
   currentMission = mission.getMission(currentStage);
   currentScore = stageManager.getScore();
-  
+  int CURRENT = time(NULL);
   lengthScore = currentScore[0];
   growthScore = currentScore[1];
   poisonScore = currentScore[2];
   gateScore = currentScore[3];
+  duration = ((double)(CURRENT - TIME) / CLOCKS_PER_SEC)*1000000;
   
   mvaddstr(3, CHAR_X+14, to_string(lengthScore).c_str());
   mvaddstr(5, CHAR_X+14, to_string(growthScore).c_str());
@@ -235,6 +239,7 @@ void ScoreBoard::printScore(){
   mvprintw(15, CHAR_X + 7+adjust, "%ls", growthProgressBar.c_str()); 
   mvprintw(17, CHAR_X + 7+adjust, "%ls", poisonProgressBar.c_str()); 
   mvprintw(19, CHAR_X + 7+adjust, "%ls", gateProgressBar.c_str()); 
+  mvaddstr(21, CHAR_X + 11+adjust, to_string(duration).c_str());
   
   mvaddstr(13, CHAR_X + 17+adjust, "( )"); 
   mvaddstr(15, CHAR_X + 17+adjust, "( )"); 
@@ -292,6 +297,7 @@ bool ScoreBoard::isCleared(bool &length, bool &growth, bool &poison, bool &gate)
     poison = false;
     gate = false;
     resetScore();
+    TIME = time(NULL);
     stageManager.nextStage();
     
     return true;

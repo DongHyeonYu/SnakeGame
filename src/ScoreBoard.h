@@ -5,6 +5,7 @@
 #include <vector>
 #include <locale.h>
 #include <string>
+#include <ctime>
 using namespace std;
 
 #include "Mission.h"
@@ -30,7 +31,9 @@ class ScoreBoard{
   //int lengthProgress, growthProgress, poisonProgress, gateProgress;
   wstring lengthProgressBar, growthProgressBar, poisonProgressBar, gateProgressBar;
   string LENGTH, GROWTH, POISON, GATE;
+  time_t TIME, timeScore;
   int lengthScore, growthScore, poisonScore, gateScore;
+  int duration;
   int currentStage;
   int adjust; 
 public:  

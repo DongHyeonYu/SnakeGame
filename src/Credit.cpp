@@ -52,7 +52,7 @@ void Credit::init(){
   initscr();
   clear();
   noecho();
-  cbreak;
+  cbreak();
   curs_set(0);
   keypad(stdscr, TRUE);
 }
