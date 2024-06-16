@@ -8,6 +8,9 @@
 #### g++ -o snake <every .cpp files> -lncursesw<br>
     g++ -o snake main.cpp SnakeGame.cpp Snake.cpp Map.cpp Item.cpp Gate.cpp Mission.cpp ScoreBoard.cpp StageManager.cpp Score.cpp -lncursesw
 
+#### or just use make
+    make
+
 
 ## Unicode Character
     wall = L'◼'; 
