@@ -38,3 +38,18 @@
 <img src="assets/snake-game-ingame1.png" width=50% height=auto>
 
 
+## Member
+| | 학과 | 학번 | 이름 |
+|:----:|:-------:|:---:|:---:|
+|조장|소프트웨어학부|20203104|유 동현|
+|조원|소프트웨어학부|20212972|김 민찬|
+|조원|소프트웨어학부|20213074|장 종아|
+
+
+
+## Demonstration Youtube Link
+#### 시연영상 1 
+[![SnakeGame 시연 #1]( https://img.youtube.com/vi/oFQDgPBdkuY/0.jpg)](https://youtu.be/oFQDgPBdkuY)
+
+#### 시연영상 2
+[![SnakeGame 시연 #2]( https://img.youtube.com/vi/5UV8QhsDFPY/0.jpg)](https://youtu.be/5UV8QhsDFPY)
