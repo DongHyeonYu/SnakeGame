@@ -21,3 +21,6 @@ Kookmin Univ. C++ SNAKE GAME Project<br>
     ◼ : \u25fc
     ● : \u25cf
     ○ : \u25cb
+
+## InGame
+
